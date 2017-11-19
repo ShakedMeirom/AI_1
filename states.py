@@ -42,4 +42,7 @@ class BusState(State):
 
     def isGoal(self):
         # TODO : Implement
-        raise NotImplementedError
+        if not self.waitingOrders and not self.ordersOnBus:
+            return True
+        else:
+            return False

@@ -1,4 +1,5 @@
 import abc
+
 class Problem(metaclass=abc.ABCMeta):
     initialState = None
 
@@ -88,11 +89,23 @@ class BusProblem(Problem):
     # Get the new state created after going from one state to a new location (on map)
     def _getNewStateAtLoc(self, previousState, newLoc):
         # TODO : Implement
+        # Orders that were waiting and are now getting on the bus:
+
         newWaiting = []
         newOnBus = []
-        newFinished = []
+        newFinished = previousState.finishedOrders[:]
 
-        raise NotImplementedError
+        for order in previousState.waitingOrders:
+            if order[0] == newLoc:
+                newOnBus.append(order)
+            else:
+                newWaiting.append(order)
+
+        for order in previousState.ordersOnBus:
+            if order[1] == newLoc:
+                newFinished.append(order)
+            else:
+                newOnBus.append(order)
 
         return BusState(newLoc, newWaiting, newOnBus, newFinished)
 
