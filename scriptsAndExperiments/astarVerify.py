@@ -20,6 +20,7 @@ mapAstar = AStar(L2DistanceHeuristic(), shouldCache=True)
 # Plot the orders
 plotOrders(roads, prob.orders)
 plt.title("Showing orders. Click to show path")
+plt.show(block=False)
 plt.waitforbuttonpress()
 
 colors = ['red', 'blue', 'green', 'orange', 'grey']
@@ -38,8 +39,9 @@ for i,order in enumerate(prob.orders):
     totalDistance += distance
 
     # Plot the path
-    plotPath(Path(roads, [s.junctionIdx for s in subPath]), color=colors[i])
-    plt.waitforbuttonpress()
+    #plotPath(Path(roads, [s.junctionIdx for s in subPath]), color=colors[i])
+    #plt.show(block=False)
+    #plt.waitforbuttonpress()
 
 print("Total distance: {:.2f}km".format(totalDistance / 1000    ))
 

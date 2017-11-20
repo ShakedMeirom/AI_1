@@ -41,13 +41,16 @@ class AStar:
             if res is not None:
                 return res
 
+        source_h = self.heuristic.estimate(problem, problem.initialState)
+
         # Initializes the required sets
         closed_set = set()  # The set of nodes already evaluated.
         parents = {}  # The map of navigated nodes.
 
         # Save the g_score and f_score for the open nodes
         g_score = {source: 0}
-        open_set = {source: self.heuristic.estimate(problem, problem.initialState)}
+        h_score = {source: source_h}
+        open_set = {source: source_h}
 
         developed = 0
 
@@ -57,12 +60,68 @@ class AStar:
         # - You should break your code into methods (two such stubs are written below)
         # - Don't forget to cache your result between returning it - TODO
 
-        # TODO : VERY IMPORTANT: must return a tuple of (path, g_score(goal), h(I), developed)
-        return ([], -1, -1, developed)
+        ###### our code ######
+
+        while open_set:
+            next = self._getOpenStateWithLowest_f_score(open_set)
+            closed_set.add(next)
+            open_set.pop(next)
+            if problem.isGoal(next):
+                # TODO : VERY IMPORTANT: must return a tuple of (path, g_score(goal), h(I), developed)
+                path = self._reconstructParentsList(parents, next)
+                tup = (path, g_score[next], source_h, developed)
+                self._storeInCache(problem, tup)
+                return tup
+
+            developed += 1
+            for s, s_cost in problem.expandWithCosts(next, self.cost):
+                new_g = g_score[next] + s_cost
+                if s in open_set:
+                    # s is in open_set
+                    if new_g < g_score[s]:
+                        # found better path to s, update accordingly
+                        g_score[s] = new_g
+                        parents[s] = next
+                        open_set[s] = new_g + h_score[s]
+                else:
+                    if s in closed_set:
+                        # s is in closed_set
+                        if new_g < g_score[s]:
+                            # found better path to s, update accordingly. move s from close to open.
+                            g_score[s] = new_g
+                            parents[s] = next
+                            open_set[s] = new_g + h_score[s]
+                            closed_set.remove(s)
+                    else:
+                        # s is new, add it to open
+                        g_score[s] = new_g
+                        parents[s] = next
+                        s_h = self.heuristic.estimate(problem, s)
+                        h_score[s] = s_h
+                        open_set[s] = new_g + s_h
+
+        # open_set is empty, there is no solution
+        return ([], -1, source_h, developed)
+
+        ######################
 
     def _getOpenStateWithLowest_f_score(self, open_set):
-        # TODO : Implement
-        raise NotImplementedError
+        return min(open_set, key=open_set.get)
+
+    # create a list of states from a given state by its parent and so on
+    def _reconstructParentsList(self, parents, state):
+
+        cont = True
+        parents_list = []
+        parents_list.append(state)
+        while cont:
+            if state in parents:
+                s_parent = parents[state]
+                parents_list.append(s_parent)
+                state = s_parent
+            else:
+                cont = False
+        return parents_list
 
     # Reconstruct the path from a given goal by its parent and so on
     def _reconstructPath(self, parents:list, goal):
