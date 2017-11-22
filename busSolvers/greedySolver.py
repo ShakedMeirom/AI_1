@@ -25,4 +25,6 @@ class GreedySolver(BusSolver):
 
             pickingOrder.append(currState.junctionIdx)
 
+        print ('Picking order:',pickingOrder)
+
         return pickingOrder

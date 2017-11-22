@@ -9,8 +9,15 @@ class GreedyBestFirstSolver(GreedySolver):
     def _getNextState(self, problem, currState):
         successors = list(problem.expand(currState))
 
-        # TODO : Return the next state
-        raise NotImplementedError
+        minS = successors[0]
+        minVal = self._scorer.compute(currState,minS)
+        for s in successors[1:]:
+            if self._scorer.compute(currState,s) < minVal:
+                minVal = self._scorer.compute(currState,s)
+                minS = s
 
-        bestIdx = None
-        return successors[bestIdx]
+        return minS
+
+        # scores = np.asarray([self._scorer.compute(currState,x) for x in successors])
+        # bestIdx = scores.argmin()
+        # return successors[bestIdx]

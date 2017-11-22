@@ -24,10 +24,10 @@ class BusSolver(metaclass=abc.ABCMeta):
         for source, target in zip(pickingOrder[:-1], pickingOrder[1:]):
             mapSubProblem = MapProblem(self.roads, source, target)
             statesSubpath = self.astar.run(mapSubProblem)[0]
-
+            print('subpath:',statesSubpath)
             delta = [s.junctionIdx for s in statesSubpath[1:]]
-
             pickingPath = pickingPath + delta
+
 
         from path import Path
         return Path(self.roads, pickingPath)
