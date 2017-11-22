@@ -63,12 +63,12 @@ class AStar:
         ###### our code ######
 
         while open_set:
-            next = self._getOpenStateWithLowest_f_score(open_set)
+            next = self._getOpenStateWithLowest_f_score(open_set, h_score)
             closed_set.add(next)
             open_set.pop(next)
             if problem.isGoal(next):
                 # TODO : VERY IMPORTANT: must return a tuple of (path, g_score(goal), h(I), developed)
-                path = self._reconstructParentsList(parents, next)
+                path = self._reconstructParents(parents, next)
                 tup = (path, g_score[next], source_h, developed)
                 self._storeInCache(problem, tup)
                 return tup
@@ -105,25 +105,66 @@ class AStar:
 
         ######################
 
-    def _getOpenStateWithLowest_f_score(self, open_set):
-        return min(open_set, key=open_set.get)
+    def _getOpenStateWithLowest_f_score(self, open_set, h_score):
+
+
+
+
+        minList =[]
+
+        for s in open_set:
+            if minList == []:
+                minList = [s]
+                fMin = open_set[s]
+            else:
+                curF = open_set[s]
+                if curF < fMin:
+                    fMin = curF
+                    minList = [s]
+                elif curF == fMin:
+                    minList.append(s)
+
+        sMin = minList.pop()
+        hMin = h_score[sMin]
+
+        for s in minList:
+            if h_score[s] < hMin:
+                hMin = h_score[s]
+                sMin = s
+
+        return sMin
+
 
     # create a list of states from a given state by its parent and so on
-    def _reconstructParentsList(self, parents, state):
+    def _reconstructParents(self, parents:dict, state):
 
-        cont = True
+        # cont = True
         parents_list = []
-        parents_list.append(state)
-        while cont:
-            if state in parents:
-                s_parent = parents[state]
-                parents_list.append(s_parent)
-                state = s_parent
-            else:
-                cont = False
+        # parents_list.append(state)
+        # while cont:
+        #     if state in parents:
+        #         s_parent = parents[state]
+        #         parents_list.append(s_parent)
+        #         state = s_parent
+        #     else:
+        #         cont = False
+        # return parents_list
+
+        while state in parents:
+            parents_list.append(state)
+
+
+
+            state = parents[state]
+
+        parents_list.reverse()
         return parents_list
 
-    # Reconstruct the path from a given goal by its parent and so on
-    def _reconstructPath(self, parents:list, goal):
-        # TODO : Implement
-        raise NotImplementedError
+
+
+
+
+
+
+
+
