@@ -5,6 +5,8 @@
 from consts import Consts
 from ways import load_map_from_csv
 from problems import BusProblem, MapProblem
+from matplotlib import use
+use('TkAgg')
 from matplotlib import pyplot as plt
 from ways.draw import plotPath, plotOrders
 from astar import AStar

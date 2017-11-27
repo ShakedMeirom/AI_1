@@ -6,3 +6,4 @@
 ./idea
 .idea
 __pycache__/
+busSolvers/__pycache__/busSolver.cpython-35.pyc

@@ -18,7 +18,8 @@ class Path:
                     self.links.append(l)
                     wasFound = True
                     break
-
+            if not wasFound:
+                print('s is:',s,'t is:',t )
             assert wasFound, "Two adjacent vertices in the path have no link between them"
 
     # Returns path length in meters
