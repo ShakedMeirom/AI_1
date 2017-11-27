@@ -1,0 +1,8 @@
+./busSolvers/__pycache__
+./costs/__pycache__
+./heuristics/__pycache__
+./ways/__pycache__
+./__pycache__
+./idea
+.idea
+__pycache__/
