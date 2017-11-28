@@ -138,26 +138,23 @@ class AStar:
     # create a list of states from a given state by its parent and so on
     def _reconstructParents(self, parents:dict, state):
 
-        # cont = True
         parents_list = []
-        # parents_list.append(state)
-        # while cont:
-        #     if state in parents:
-        #         s_parent = parents[state]
-        #         parents_list.append(s_parent)
-        #         state = s_parent
-        #     else:
-        #         cont = False
-        # return parents_list
 
         while state in parents:
+
             parents_list.append(state)
-
-
-
             state = parents[state]
 
+
+        #now the last element in parents is the second element,
+        #because we have excluded the source. adding it.
+
+        if parents_list: #list is not empty
+            parents_list.append(parents[parents_list[-1]])
+
         parents_list.reverse()
+
+
         return parents_list
 
 

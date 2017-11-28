@@ -7,3 +7,7 @@
 .idea
 __pycache__/
 busSolvers/__pycache__/busSolver.cpython-35.pyc
+*.pkl
+*__pycache__*
+busSolvers/__pycache__/__init__.cpython-35.pyc
+busSolvers/__pycache__/greedyBestFirstSolver.cpython-35.pyc
