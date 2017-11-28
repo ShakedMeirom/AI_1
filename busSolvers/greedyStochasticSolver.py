@@ -1,5 +1,6 @@
 from . import GreedySolver
 import numpy as np
+from scriptsAndExperiments.temperature import calcPorbabilty
 
 class GreedyStochasticSolver(GreedySolver):
     _TEMPERATURE_DECAY_FACTOR = None
@@ -17,15 +18,11 @@ class GreedyStochasticSolver(GreedySolver):
         # Get the scores
         X = np.array([self._scorer.compute(currState, target) for target in successors])
 
-        # Initialize an all-zeros vector for the distribution
-        P = np.zeros((len(successors),))
 
-        # TODO: Fill the distribution in P as explained in the instructions.
-        # TODO : No changes in the rest of the code are needed
-        raise NotImplementedError
+        P = calcPorbabilty(X, self.T, self._N)
 
         # Update the temperature
-        self.T *= self._TEMERATURE_DECAY_FACTOR
+        self.T *= self._TEMPERATURE_DECAY_FACTOR
 
         return P
 
@@ -36,7 +33,9 @@ class GreedyStochasticSolver(GreedySolver):
 
         # TODO : Choose the next state stochastically according to the calculated distribution.
         # You should look for a suitable function in numpy.random.
-        nextIdx = None
+
+
+        nextIdx = np.random.choice(len(P),1, p = P)[0]
 
         return successors[nextIdx]
 

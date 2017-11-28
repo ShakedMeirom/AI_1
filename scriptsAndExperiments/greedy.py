@@ -20,16 +20,9 @@ from heuristics import L2DistanceHeuristic
 #New:
 from time import time
 start = time()
-import os,pickle
-ROADS_ISRAEL_PICKLE = 'roads_israel.pkl'
 
-if os.path.isfile(ROADS_ISRAEL_PICKLE):
-    with open(ROADS_ISRAEL_PICKLE,'rb') as fh:
-        roads = pickle.load(fh)
-else:
-    roads = load_map_from_csv(Consts.getDataFilePath("israel.csv"))
-    with open(ROADS_ISRAEL_PICKLE,'wb') as fh:
-        pickle.dump(roads, fh)
+
+roads = load_map_from_csv(Consts.getDataFilePath("israel.csv"))
 ###############################################
 
 for fileName in ["TLV_5.in", "SDEROT_50.in", "BEER_SHEVA_100.in", "HAIFA_100.in"]:

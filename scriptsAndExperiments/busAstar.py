@@ -29,7 +29,21 @@ solver = GreedyStochasticSolver(roads, mapAstar, scorer,
                                 Consts.STOCH_TOP_SCORES_TO_CONSIDER)
 
 REPEATS = 200
-results = [solver.solve(prob).getDistance() / 1000 for _ in range(REPEATS)]
+
+import os
+import pickle
+RESULTS_PICKLE_NAME = 'stochastic_greedy_TLV5_'+str(REPEATS)+'.pkl'
+
+if os.path.isfile(RESULTS_PICKLE_NAME):
+    with open(RESULTS_PICKLE_NAME,'rb') as fh:
+        results = pickle.load(fh)
+else:
+
+    results = [solver.solve(prob).getDistance() / 1000 for _ in range(REPEATS)]
+    with open(RESULTS_PICKLE_NAME,'wb') as fh:
+        pickle.dump(results, fh)
+
+#TODO: DOR - remove pickle, it was added just for increased speed
 
 print("Stochastic ({} repetitions): {}km".format(REPEATS, min(results)))
 
