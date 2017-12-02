@@ -17,7 +17,3 @@ class GreedyBestFirstSolver(GreedySolver):
                 minS = s
 
         return minS
-
-        # scores = np.asarray([self._scorer.compute(currState,x) for x in successors])
-        # bestIdx = scores.argmin()
-        # return successors[bestIdx]

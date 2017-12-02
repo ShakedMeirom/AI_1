@@ -9,7 +9,6 @@ import numpy as np
 
 #TODO: DOR: Change repeats back to 150
 REPEATS = 150
-# REPEATS = 10
 
 # Load the files
 roads = load_map_from_csv(Consts.getDataFilePath("israel.csv"))

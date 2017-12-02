@@ -19,12 +19,10 @@ class GreedySolver(BusSolver):
         pickingOrder = [problem.initialState.junctionIdx]
 
         currState = problem.initialState
-
         while not problem.isGoal(currState):
             currState = self._getNextState(problem, currState)
 
             pickingOrder.append(currState.junctionIdx)
 
-        print ('Picking order:',pickingOrder)
-
+        #print ('Picking order:',pickingOrder)
         return pickingOrder

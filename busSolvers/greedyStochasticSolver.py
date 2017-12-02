@@ -18,7 +18,6 @@ class GreedyStochasticSolver(GreedySolver):
         # Get the scores
         X = np.array([self._scorer.compute(currState, target) for target in successors])
 
-
         P = calcPorbabilty(X, self.T, self._N)
 
         # Update the temperature
@@ -34,10 +33,9 @@ class GreedyStochasticSolver(GreedySolver):
         # TODO : Choose the next state stochastically according to the calculated distribution.
         # You should look for a suitable function in numpy.random.
 
+        nextStage = np.random.choice(successors, size=1, p=P)[0]
 
-        nextIdx = np.random.choice(len(P),1, p = P)[0]
-
-        return successors[nextIdx]
+        return nextStage
 
     # Override the base solve method to initialize the temperature
     def solve(self, initialState):

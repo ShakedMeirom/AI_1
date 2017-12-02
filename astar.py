@@ -107,9 +107,6 @@ class AStar:
 
     def _getOpenStateWithLowest_f_score(self, open_set, h_score):
 
-
-
-
         minList =[]
 
         for s in open_set:
@@ -153,7 +150,6 @@ class AStar:
             parents_list.append(parents[parents_list[-1]])
 
         parents_list.reverse()
-
 
         return parents_list
 
