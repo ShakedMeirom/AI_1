@@ -6,6 +6,7 @@ from problems import BusProblem
 from costs import L2DistanceCost
 from heuristics import L2DistanceHeuristic
 import numpy as np
+from scipy import stats
 
 #TODO: DOR: Change repeats back to 150
 REPEATS = 150
@@ -86,10 +87,11 @@ plt.show()
 
 # # TODO : Part2 - Remove the exit and perform the t-test
 resultsArr = np.asarray(results)
-variance = resultsArr.var()
+std = resultsArr.std()
 mean = resultsArr.mean()
+pVal = stats.ttest_1samp(resultsArr, greedyResult[0])[1]
 
-# raise NotImplementedError
-
-
+print('the std of the stochastic algorithm results is:', std,
+      '\nand the mean is:', mean)
+print('The pValue is:', pVal)
 
