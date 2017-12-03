@@ -98,28 +98,15 @@ def load_map_from_csv(filename, start=0, count=sys.maxsize):
     example: load_map_from_csv(start=50000, count=50000))
     '''
 
-    #TODO: DOR - remove pickling.
-    import os, pickle
-
-    pickleName = filename+'.pkl'
-    if os.path.isfile(pickleName):
-        with open(pickleName,'rb') as fh:
-            roads = pickle.load(fh)
-    else:
-
-
-        import csv
-        from itertools import islice
-        with open(filename, 'rt') as f:
-            it = islice(f, start, min(start + count, sys.maxsize))
-            lst = {int(row[0]): _make_junction(*row) for row in csv.reader(it)}
-            if count < sys.maxsize:
-                lst = {i: Junction(i, j.lat, j.lon, [lnk for lnk in j.links if lnk.target in lst])
-                       for i, j in lst.items()}
-        roads =  Roads(lst)
-
-        with open(pickleName,'wb') as fh:
-            pickle.dump(roads, fh)
+    import csv
+    from itertools import islice
+    with open(filename, 'rt') as f:
+        it = islice(f, start, min(start + count, sys.maxsize))
+        lst = {int(row[0]): _make_junction(*row) for row in csv.reader(it)}
+        if count < sys.maxsize:
+            lst = {i: Junction(i, j.lat, j.lon, [lnk for lnk in j.links if lnk.target in lst])
+                   for i, j in lst.items()}
+    roads =  Roads(lst)
 
     return roads
 

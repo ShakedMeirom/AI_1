@@ -29,21 +29,7 @@ solver = GreedyStochasticSolver(roads, mapAstar, scorer,
                                 Consts.STOCH_TOP_SCORES_TO_CONSIDER)
 
 REPEATS = 200
-
-import os
-import pickle
-RESULTS_PICKLE_NAME = 'stochastic_greedy_TLV5_'+str(REPEATS)+'.pkl'
-
-if os.path.isfile(RESULTS_PICKLE_NAME):
-    with open(RESULTS_PICKLE_NAME,'rb') as fh:
-        results = pickle.load(fh)
-else:
-
-    results = [solver.solve(prob).getDistance() / 1000 for _ in range(REPEATS)]
-    with open(RESULTS_PICKLE_NAME,'wb') as fh:
-        pickle.dump(results, fh)
-
-#TODO: DOR - remove pickle, it was added just for increased speed
+results = [solver.solve(prob).getDistance() / 1000 for _ in range(REPEATS)]
 
 print("Stochastic ({} repetitions): {}km".format(REPEATS, min(results)))
 
@@ -62,7 +48,6 @@ busAstar = AStar(customH, cost=ActualDistanceCost(roads, mapAstar))
 _,gBus,hVal,developed = busAstar.run(prob)
 print("A* (Custom heuristic):\tg(G)={:.2f}km, h(I)={:.2f}km, developed: {} states".format(gBus/1000, hVal/1000, developed))
 
-exit(1)
 # Run A* with the MST heuristic
 tspH = MSTHeuristic(roads, prob.initialState, ActualDistanceCost(roads, mapAstar))
 busAstar = AStar(tspH, cost=ActualDistanceCost(roads, mapAstar))

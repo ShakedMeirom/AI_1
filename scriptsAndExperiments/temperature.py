@@ -51,6 +51,7 @@ if __name__ == '__main__':
     plt.title('probability as a function of the temperature')
     plt.xlabel('T')
     plt.ylabel('P')
+    plt.grid()
     plt.show()
 
 

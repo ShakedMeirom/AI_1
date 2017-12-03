@@ -11,13 +11,6 @@ from costs import L2DistanceCost
 from heuristics import L2DistanceHeuristic
 
 
-#TODO: DOR - the only line here should be : roads = load_map_from_csv(Consts.getDataFilePath("israel.csv"))
-#TODO: I've added the pickle in order to increase speed
-
-#Old:
-# roads = load_map_from_csv(Consts.getDataFilePath("israel.csv"))
-
-#New:
 from time import time
 start = time()
 

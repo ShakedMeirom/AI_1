@@ -8,7 +8,6 @@ from heuristics import L2DistanceHeuristic
 import numpy as np
 from scipy import stats
 
-#TODO: DOR: Change repeats back to 150
 REPEATS = 150
 
 # Load the files
@@ -29,30 +28,14 @@ solver = GreedyStochasticSolver(roads, mapAstar, scorer,
                                 Consts.STOCH_INITIAL_TEMPERATURE,
                                 Consts.STOCH_TEMPERATURE_DECAY_FUNCTION,
                                 Consts.STOCH_TOP_SCORES_TO_CONSIDER)
-#TODO: DOR - remove pickle
-#TODO: DOR - at the moment we're getting wrong results.
-#stochastic returns distance of about 4000, and non stochastic returns 1329
 
-#Add pickle to save time:
-import os
-import pickle
-RESULTS_PICKLE_NAME = 'stochastic_greedy_'+str(REPEATS)+'.pkl'
+results = np.zeros((REPEATS,))
+print("Stochastic repeats:")
+for i in range(REPEATS):
+    print("{}..".format(i+1), end=" ", flush=True)
+    results[i] = solver.solve(prob).getDistance() / 1000
 
-if os.path.isfile(RESULTS_PICKLE_NAME):
-    with open(RESULTS_PICKLE_NAME,'rb') as fh:
-        results = pickle.load(fh)
-else:
-
-    results = np.zeros((REPEATS,))
-    print("Stochastic repeats:")
-    for i in range(REPEATS):
-        print("{}..".format(i+1), end=" ", flush=True)
-        results[i] = solver.solve(prob).getDistance() / 1000
-
-    print("\nDone!")
-    with open(RESULTS_PICKLE_NAME,'wb') as fh:
-        pickle.dump(results, fh)
-
+print("\nDone!")
 
 
 #Create results for plotting (in order to make in monotonic)
@@ -77,15 +60,12 @@ plt.title('Greedy Stochastic algorithm performance')
 plt.xlabel('iteration')
 plt.ylabel('distance')
 plt.legend(loc = 'upper right')
+plt.grid()
 plt.show()
 
 
 
-#TODO: DOR: currently the code runs awfully slow, the main time consumption comes from aStar.
-#Need to profile aStar.run function
 
-
-# # TODO : Part2 - Remove the exit and perform the t-test
 resultsArr = np.asarray(results)
 std = resultsArr.std()
 mean = resultsArr.mean()
