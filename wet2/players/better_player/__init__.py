@@ -12,6 +12,7 @@ LAST_ROW = BOARD_ROWS - 1
 CORNER_INDICES = [(LAST_COL, 0), (0, 0), (LAST_COL, LAST_ROW), (0, LAST_ROW)]
 
 
+
 #Utils:
 # "near corners" are squares that allow direct access to corners
 def getNearCornerIndices():
@@ -134,18 +135,20 @@ class Player(abstract.AbstractPlayer):
         if len(state.get_possible_moves()) == 0:
             return INFINITY if state.curr_player != self.color else -INFINITY
 
-        parameters = np.asarray(self.discs_diff(state), self.opponent_moves(state))
-        weights = np.asarray([1, 0.5])
+        weightsParamsTupleList = [
+            (1, self.discs_diff(state)),
+            (0.5, self.opponent_moves(state)),
+            (10, self.countCorners(state, self.color)),
+            (-5, self.countNearCorners(state, self.color)),
+            (3, self.countTraps(state, self.color)),
+            (2, self.countEdges(state, self.color))]
 
-        heuristic_value = sum(parameters * weights)
+
+        heuristic_value = 0
+        for weight, param in weightsParamsTupleList:
+            heuristic_value += weight * param
+
         return heuristic_value
-
-
-    def utility(self, state):
-        pass
-
-
-
 
     #Return how many corners belongs to color
     def countCorners(self, state, color):
@@ -173,7 +176,7 @@ class Player(abstract.AbstractPlayer):
 
         return sum([x == color] for x in trapVals)
 
-    def countEdges(self):
+    def countEdges(self, state, color):
 
         count = 0
         nearCorners = getNearCornerIndices()
@@ -181,7 +184,8 @@ class Player(abstract.AbstractPlayer):
 
         for x in range(BOARD_COLS):
             for y in range(BOARD_ROWS):
-                if (x == 0 or x == LAST_COL or y == 0 or y == LAST_ROW) and\
+                if state.board[x][y] == color and \
+                        (x == 0 or x == LAST_COL or y == 0 or y == LAST_ROW) and\
                         ((x, y) not in nearCorners and
                          (x, y) not in traps and
                          (x, y) not in CORNER_INDICES):
