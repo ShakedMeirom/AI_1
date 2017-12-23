@@ -3,3 +3,5 @@
 *.pyc
 *.pkl
 *book.gam
+./wet1/*
+./wet
