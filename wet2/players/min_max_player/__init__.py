@@ -5,6 +5,7 @@ import time
 import copy
 import math
 import numpy as np
+import heuristics
 
 class Player(abstract.AbstractPlayer):
 
@@ -53,30 +54,10 @@ class Player(abstract.AbstractPlayer):
 
 
     def heuristic(self, state):
-        if len(state.get_possible_moves()) == 0:
-            return INFINITY if state.curr_player != self.color else -INFINITY
-
-        my_u = 0
-        op_u = 0
-        for x in range(BOARD_COLS):
-            for y in range(BOARD_ROWS):
-                if state.board[x][y] == self.color:
-                    my_u += 1
-                if state.board[x][y] == OPPONENT_COLOR[self.color]:
-                    op_u += 1
-
-        if my_u == 0:
-            # I have no tools left
-            return -INFINITY
-        elif op_u == 0:
-            # The opponent has no tools left
-            return INFINITY
-        else:
-            return my_u - op_u
+        return heuristics.smart_heuristic(state, self.color)
 
     def no_more_time(self):
-        # print('At no more time:')
-        # print()
+
         return (time.time() - self.clock) >= self.time_for_current_move
 
     def __repr__(self):

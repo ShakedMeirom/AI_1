@@ -99,7 +99,7 @@ class MiniMaxAlgorithm:
         if self.no_more_time():
             raise ExceededTimeError
         if isGoal(state) or depth == 0:
-            self.utility(state), None #TODO: Make sure we indeed need to return None
+            return self.utility(state), None #TODO: Make sure we indeed need to return None
 
         possibleMoves = state.get_possible_moves()
 
