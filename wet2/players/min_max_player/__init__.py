@@ -52,7 +52,6 @@ class Player(abstract.AbstractPlayer):
 
         return bestMove
 
-
     def heuristic(self, state):
         return heuristics.smart_heuristic(state, self.color)
 

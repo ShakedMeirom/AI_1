@@ -64,8 +64,13 @@ def run_with_limited_time(func, args, kwargs, time_limit):
 
 
 def isGoal(state):
-
     return not state.get_possible_moves()
+
+
+def getNextState(state, move):
+    nextState = copy.deepcopy(state)
+    nextState.perform_move(move[0], move[1])
+    return nextState
 
 
 class MiniMaxAlgorithm:
@@ -107,8 +112,7 @@ class MiniMaxAlgorithm:
             curMax = -INFINITY
             bestMove = None
             for m in possibleMoves:
-                nextState = copy.deepcopy(state)
-                nextState.perform_move(m[0], m[1])
+                nextState = getNextState(state, m)
                 val, _ = self.search(nextState, depth-1, not maximizing_player)
                 if curMax < val:
                     curMax = val
@@ -118,8 +122,7 @@ class MiniMaxAlgorithm:
         else:
             curMin = INFINITY
             for m in possibleMoves:
-                nextState = copy.deepcopy(state)
-                nextState.perform_move(m[0], m[1])
+                nextState = getNextState(state, m)
                 val, _ = self.search(nextState, depth-1, not maximizing_player)
                 curMin = min(curMin, val)
             return self.utility(state), None
@@ -155,4 +158,35 @@ class MiniMaxWithAlphaBetaPruning:
         :param maximizing_player: Whether this is a max node (True) or a min node (False).
         :return: A tuple: (The alpha-beta algorithm value, The move in case of max node or None in min mode)
         """
-        return self.utility(state), None
+        if self.no_more_time():
+            raise ExceededTimeError
+        if isGoal(state) or depth == 0:
+            return self.utility(state), None #TODO: Make sure we indeed need to return None
+
+        possibleMoves = state.get_possible_moves()
+
+        if maximizing_player:
+            curMax = -INFINITY
+            bestMove = None
+            for m in possibleMoves:
+                nextState = getNextState(state, m)
+                val, _ = self.search(nextState, depth-1, alpha, beta, not maximizing_player)
+                if curMax < val:
+                    curMax = val
+                    bestMove = m
+                alpha = max(alpha, curMax)
+                if curMax > beta:
+                    return INFINITY
+            return self.utility(state), bestMove
+
+        else:
+            curMin = INFINITY
+            for m in possibleMoves:
+                nextState = getNextState(state, m)
+                val, _ = self.search(nextState, depth-1, alpha, beta, not maximizing_player)
+                curMin = min(curMin, val)
+                beta = min(beta, curMin)
+                if curMin < alpha:
+                    return -INFINITY
+            return self.utility(state), None
+
