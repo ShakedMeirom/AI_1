@@ -156,7 +156,9 @@ class Player(abstract.AbstractPlayer):
 
         cornersVal = [state.board[x][y] for x,y in CORNER_INDICES]
 
-        return sum([x == color] for x in cornersVal)
+        cornersCount = sum([x == color for x in cornersVal])
+        print('Corners count:', cornersCount)
+        return cornersCount
 
 
     # "near corners" are squares that allow direct access to corners
@@ -166,7 +168,9 @@ class Player(abstract.AbstractPlayer):
         nearCornerIndices = getNearCornerIndices()
         nearCornersVal = [state.board[x][y] for x,y in nearCornerIndices]
 
-        return sum([x == color] for x in nearCornersVal)
+        nearCornersCount = sum([x == color for x in nearCornersVal])
+        print('Near corners count:', nearCornersCount)
+        return nearCornersCount
 
 
     def countTraps(self, state, color):
@@ -174,7 +178,9 @@ class Player(abstract.AbstractPlayer):
         trapIndices = getTrapsIndices()
         trapVals = [state.board[x][y] for x,y in trapIndices]
 
-        return sum([x == color] for x in trapVals)
+        trapsCount = sum([x == color for x in trapVals])
+        print('Traps count:', trapsCount)
+        return trapsCount
 
     def countEdges(self, state, color):
 
@@ -190,8 +196,11 @@ class Player(abstract.AbstractPlayer):
                          (x, y) not in traps and
                          (x, y) not in CORNER_INDICES):
                     count += 1
-
+        print('Edges count:', count)
         return count
+
+    def __repr__(self):
+        return '{} {}'.format(abstract.AbstractPlayer.__repr__(self), 'better')
 
 # def printIndices(l):
 #     for x in range(BOARD_COLS):

@@ -9,6 +9,7 @@ import copy
 INFINITY = float(6000)
 
 
+
 class ExceededTimeError(RuntimeError):
     """Thrown when the given function exceeded its runtime.
     """
@@ -62,6 +63,11 @@ def run_with_limited_time(func, args, kwargs, time_limit):
     return q_get
 
 
+def isGoal(state):
+
+    return not state.get_possible_moves()
+
+
 class MiniMaxAlgorithm:
 
     def __init__(self, utility, my_color, no_more_time, selective_deepening):
@@ -89,7 +95,35 @@ class MiniMaxAlgorithm:
         :param maximizing_player: Whether this is a max node (True) or a min node (False).
         :return: A tuple: (The min max algorithm value, The move in case of max node or None in min mode)
         """
-        return self.utility(state), None
+
+        if self.no_more_time():
+            raise ExceededTimeError
+
+        if isGoal(state) or depth == 0:
+            self.utility(state), None #TODO: Make sure we indeed need to return None
+
+        possibleMoves = state.get_possible_moves()
+
+        if maximizing_player:
+            curMax = -INFINITY
+            bestMove = None
+            for m in possibleMoves:
+                nextState = state.perfrom_move(m[0], m[1])
+                val = self.search(nextState, depth-1, not maximizing_player)
+                if curMax < val:
+                    curMax = val
+                    bestMove = m
+            return self.utility(state), bestMove
+
+        else:
+            curMin = INFINITY
+            for m in possibleMoves:
+                nextState = state.perfrom_move(m[0], m[1])
+                val = self.search(nextState, depth-1, not maximizing_player)
+                curMin = min(curMin, val)
+            return self.utility(state), None
+
+
 
 
 class MiniMaxWithAlphaBetaPruning:
