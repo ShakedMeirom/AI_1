@@ -64,6 +64,11 @@ class Player(abstract.AbstractPlayer):
     def __repr__(self):
         return '{} {}'.format(abstract.AbstractPlayer.__repr__(self), 'better')
 
+
+
+
+
+
 # def printIndices(l):
 #     for x in range(BOARD_COLS):
 #         tmp = []

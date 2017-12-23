@@ -1,7 +1,7 @@
 import abstract
 from utils import INFINITY, run_with_limited_time, ExceededTimeError
 from Reversi.consts import EM, OPPONENT_COLOR, BOARD_COLS, BOARD_ROWS
-
+import scripts
 
 LAST_COL = BOARD_COLS - 1
 LAST_ROW = BOARD_ROWS - 1
@@ -160,3 +160,46 @@ def countEdges(state, color):
                 count += 1
     # print('Edges count:', count)
     return count
+
+
+
+############Opening related utils:#################################
+
+
+
+def getPartialOpeningsDict():
+
+    d = scripts.createOpeningsDict()
+
+
+    #For each partial board state add a board to the hash with the next move.
+
+
+
+
+
+def transformBookToOurCoordinates(x, y):
+
+    BOOK_X_TO_OUR_Y = {
+        'a':7,
+        'b':6,
+        'c':5,
+        'd':4,
+        'e':3,
+        'f':2,
+        'g':1,
+        'h':0
+    }
+
+    BOOK_Y_TO_OUR_X = {
+        1:0,
+        2:1,
+        3:2,
+        4:3,
+        5:4,
+        6:5,
+        7:6,
+        8:7
+    }
+
+    return BOOK_Y_TO_OUR_X[y], BOOK_X_TO_OUR_Y[x]
