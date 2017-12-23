@@ -1,13 +1,5 @@
-./busSolvers/__pycache__
-./costs/__pycache__
-./heuristics/__pycache__
-./ways/__pycache__
-./__pycache__
-./idea
-.idea
-__pycache__/
-busSolvers/__pycache__/busSolver.cpython-35.pyc
-*.pkl
+*.idea
 *__pycache__*
-busSolvers/__pycache__/__init__.cpython-35.pyc
-busSolvers/__pycache__/greedyBestFirstSolver.cpython-35.pyc
+*.pyc
+*.pkl
+*book.gam
