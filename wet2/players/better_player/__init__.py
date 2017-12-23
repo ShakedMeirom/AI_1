@@ -137,11 +137,11 @@ class Player(abstract.AbstractPlayer):
 
         weightsParamsTupleList = [
             (1, self.discs_diff(state)),
-            (0.5, self.opponent_moves(state)),
-            (10, self.countCorners(state, self.color)),
-            (-5, self.countNearCorners(state, self.color)),
-            (3, self.countTraps(state, self.color)),
-            (2, self.countEdges(state, self.color))]
+            (0.25, self.opponent_moves(state)),
+            (5, self.countCorners(state, self.color)),
+            (-1.5, self.countNearCorners(state, self.color)),
+            (0.5, self.countTraps(state, self.color)),
+            (1, self.countEdges(state, self.color))]
 
 
         heuristic_value = 0
@@ -157,7 +157,7 @@ class Player(abstract.AbstractPlayer):
         cornersVal = [state.board[x][y] for x,y in CORNER_INDICES]
 
         cornersCount = sum([x == color for x in cornersVal])
-        print('Corners count:', cornersCount)
+        # print('Corners count:', cornersCount)
         return cornersCount
 
 
@@ -169,7 +169,7 @@ class Player(abstract.AbstractPlayer):
         nearCornersVal = [state.board[x][y] for x,y in nearCornerIndices]
 
         nearCornersCount = sum([x == color for x in nearCornersVal])
-        print('Near corners count:', nearCornersCount)
+        # print('Near corners count:', nearCornersCount)
         return nearCornersCount
 
 
@@ -179,7 +179,7 @@ class Player(abstract.AbstractPlayer):
         trapVals = [state.board[x][y] for x,y in trapIndices]
 
         trapsCount = sum([x == color for x in trapVals])
-        print('Traps count:', trapsCount)
+        # print('Traps count:', trapsCount)
         return trapsCount
 
     def countEdges(self, state, color):
@@ -196,7 +196,7 @@ class Player(abstract.AbstractPlayer):
                          (x, y) not in traps and
                          (x, y) not in CORNER_INDICES):
                     count += 1
-        print('Edges count:', count)
+        # print('Edges count:', count)
         return count
 
     def __repr__(self):
