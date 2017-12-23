@@ -6,8 +6,69 @@ import copy
 import math
 import numpy as np
 
+#Consts:
+LAST_COL = BOARD_COLS - 1
+LAST_ROW = BOARD_ROWS - 1
+CORNER_INDICES = [(LAST_COL, 0), (0, 0), (LAST_COL, LAST_ROW), (0, LAST_ROW)]
+
+
+#Utils:
+# "near corners" are squares that allow direct access to corners
+def getNearCornerIndices():
+
+    nearCornerIndices = []
+
+    for x,y in CORNER_INDICES:
+
+        if x == 0:
+            nearCornerIndices.append((1,y))
+
+        if y == 0:
+            nearCornerIndices.append((x,1))
+
+        if x == LAST_COL:
+            nearCornerIndices.append((LAST_COL-1, y))
+
+        if y == LAST_ROW:
+            nearCornerIndices.append((x, LAST_ROW -1))
+
+    diagonalToCorner = [(LAST_COL-1, 1),(LAST_COL -1, LAST_ROW-1),
+                        (1, LAST_ROW -1), (1,1)]
+
+    nearCornerIndices += diagonalToCorner
+    return nearCornerIndices
+
+#Traps are squares thata allow access to "near corner" squares
+def getTrapsIndices():
+
+    nearCornerIndices = getNearCornerIndices()
+    trapIndices = []
+
+    for x,y in nearCornerIndices:
+
+        if x == 1:
+            trapIndices.append((2,y))
+
+        if y == 1:
+            trapIndices.append((x,2))
+
+        if x == LAST_COL-1:
+            trapIndices.append((LAST_COL-2, y))
+
+        if y == LAST_ROW-1:
+            trapIndices.append((x, LAST_ROW -2))
+
+    diagonalToNearCorner = [(LAST_COL-2, 2),(LAST_COL -2, LAST_ROW-2),
+                        (2, LAST_ROW -2), (2,2)]
+
+    trapIndices += diagonalToNearCorner
+
+    return trapIndices
+
+
 
 class Player(abstract.AbstractPlayer):
+
 
     def __init__(self, setup_time, player_color, time_per_k_turns, k):
         abstract.AbstractPlayer.__init__(self, setup_time,
@@ -80,13 +141,68 @@ class Player(abstract.AbstractPlayer):
         return heuristic_value
 
 
+    def utility(self, state):
+        pass
 
 
 
 
+    #Return how many corners belongs to color
+    def countCorners(self, state, color):
 
 
-        
+        cornersVal = [state.board[x][y] for x,y in CORNER_INDICES]
+
+        return sum([x == color] for x in cornersVal)
 
 
+    # "near corners" are squares that allow direct access to corners
+    def countNearCorners(self, state, color):
 
+
+        nearCornerIndices = getNearCornerIndices()
+        nearCornersVal = [state.board[x][y] for x,y in nearCornerIndices]
+
+        return sum([x == color] for x in nearCornersVal)
+
+
+    def countTraps(self, state, color):
+
+        trapIndices = getTrapsIndices()
+        trapVals = [state.board[x][y] for x,y in trapIndices]
+
+        return sum([x == color] for x in trapVals)
+
+    def countEdges(self):
+
+        count = 0
+        nearCorners = getNearCornerIndices()
+        traps = getTrapsIndices()
+
+        for x in range(BOARD_COLS):
+            for y in range(BOARD_ROWS):
+                if (x == 0 or x == LAST_COL or y == 0 or y == LAST_ROW) and\
+                        ((x, y) not in nearCorners and
+                         (x, y) not in traps and
+                         (x, y) not in CORNER_INDICES):
+                    count += 1
+
+        return count
+
+# def printIndices(l):
+#     for x in range(BOARD_COLS):
+#         tmp = []
+#         for y in range(BOARD_ROWS):
+#             if (x, y) in l:
+#                 tmp.append(1)
+#             else:
+#                 tmp.append(0)
+#         print(tmp)
+# print('Printing corners:')
+# printIndices(CORNER_INDICES)
+#
+# print('Near corners')
+# printIndices(getNearCornerIndices())
+#
+# print('Traps:')
+# printIndices(getTrapsIndices())
