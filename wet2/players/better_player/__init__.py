@@ -45,3 +45,12 @@ class Player(abstract.AbstractPlayer):
             self.time_remaining_in_round -= (time.time() - self.clock)
 
         return best_move
+
+
+    def utility(self, state):
+
+
+        
+
+
+
