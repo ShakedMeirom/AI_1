@@ -176,7 +176,7 @@ class MiniMaxWithAlphaBetaPruning:
                     bestMove = m
                 alpha = max(alpha, curMax)
                 if curMax > beta:
-                    return INFINITY
+                    return INFINITY, bestMove
             return self.utility(state), bestMove
 
         else:
@@ -187,6 +187,6 @@ class MiniMaxWithAlphaBetaPruning:
                 curMin = min(curMin, val)
                 beta = min(beta, curMin)
                 if curMin < alpha:
-                    return -INFINITY
+                    return -INFINITY, None
             return self.utility(state), None
 
