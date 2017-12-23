@@ -29,7 +29,7 @@ class Player(abstract.AbstractPlayer):
         if len(possible_moves) == 1:
             return possible_moves[0]
 
-        alg = MiniMaxAlgorithm(self.heuristics, self.color, self.no_more_time, None)
+        alg = MiniMaxAlgorithm(self.heuristic, self.color, self.no_more_time, None)
 
         bestMove = None
         bestVal = None
@@ -75,6 +75,8 @@ class Player(abstract.AbstractPlayer):
             return my_u - op_u
 
     def no_more_time(self):
+        # print('At no more time:')
+        # print()
         return (time.time() - self.clock) >= self.time_for_current_move
 
     def __repr__(self):

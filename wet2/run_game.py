@@ -7,6 +7,7 @@ from Reversi.consts import X_PLAYER, O_PLAYER, TIE, OPPONENT_COLOR
 import utils
 import copy
 import players.interactive
+import traceback
 
 class GameRunner:
     def __init__(self, setup_time, time_per_k_turns, k, verbose, x_player, o_player):
@@ -142,8 +143,9 @@ class GameRunner:
 if __name__ == '__main__':
     try:
         GameRunner(*sys.argv[1:]).run()
-    except TypeError:
+    except TypeError as e:
         print("""Syntax: {0} setup_time time_per_k_turns k verbose x_player o_player
 For example: {0} 2 10 5 y interactive random_player
 Please read the docs in the code for more info.""".
               format(sys.argv[0]))
+        print(traceback.format_exc())

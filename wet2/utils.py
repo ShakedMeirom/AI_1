@@ -98,7 +98,6 @@ class MiniMaxAlgorithm:
 
         if self.no_more_time():
             raise ExceededTimeError
-
         if isGoal(state) or depth == 0:
             self.utility(state), None #TODO: Make sure we indeed need to return None
 
@@ -108,8 +107,9 @@ class MiniMaxAlgorithm:
             curMax = -INFINITY
             bestMove = None
             for m in possibleMoves:
-                nextState = state.perfrom_move(m[0], m[1])
-                val = self.search(nextState, depth-1, not maximizing_player)
+                nextState = copy.deepcopy(state)
+                nextState.perform_move(m[0], m[1])
+                val, _ = self.search(nextState, depth-1, not maximizing_player)
                 if curMax < val:
                     curMax = val
                     bestMove = m
@@ -118,8 +118,9 @@ class MiniMaxAlgorithm:
         else:
             curMin = INFINITY
             for m in possibleMoves:
-                nextState = state.perfrom_move(m[0], m[1])
-                val = self.search(nextState, depth-1, not maximizing_player)
+                nextState = copy.deepcopy(state)
+                nextState.perform_move(m[0], m[1])
+                val, _ = self.search(nextState, depth-1, not maximizing_player)
                 curMin = min(curMin, val)
             return self.utility(state), None
 
