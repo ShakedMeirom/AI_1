@@ -39,8 +39,6 @@ class Player(abstract.AbstractPlayer):
             return possible_moves[0]
 
         #Try to get move from openings book:
-        print('Game state:')
-        game_state.draw_board()
         opening = self.opening_move(game_state)
 
 
@@ -79,11 +77,8 @@ class Player(abstract.AbstractPlayer):
 
     def opening_move(self, state):
         if state in self.openingsDict:
-            print('State found:')
-            state.draw_board()
             return self.openingsDict[state]
         else:
-            print('State not found')
             return None
 
 
