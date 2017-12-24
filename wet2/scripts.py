@@ -18,9 +18,7 @@ def createOpeningsDict():
             line = line[:30]
             d.update([line])
 
-
     return d.most_common(70)
-
 
 
 d = createOpeningsDict()

@@ -30,12 +30,24 @@ class Player(abstract.AbstractPlayer):
         self.turns_remaining_in_round = self.k
         self.time_remaining_in_round = self.time_per_k_turns
         self.time_for_current_move = self.time_remaining_in_round / self.turns_remaining_in_round - 0.05
+        self.openingsDict = heuristics.getPartialOpeningsDict()
 
     def get_move(self, game_state, possible_moves):
         self.clock = time.time()
         self.time_for_current_move = self.time_remaining_in_round / self.turns_remaining_in_round - 0.05
         if len(possible_moves) == 1:
             return possible_moves[0]
+
+        #Try to get move from openings book:
+        print('Game state:')
+        game_state.draw_board()
+        opening = self.opening_move(game_state)
+
+
+        if opening:
+            return opening
+
+
 
         best_move = possible_moves[0]
         next_state = copy.deepcopy(game_state)
@@ -65,8 +77,14 @@ class Player(abstract.AbstractPlayer):
         return '{} {}'.format(abstract.AbstractPlayer.__repr__(self), 'better')
 
 
-
-
+    def opening_move(self, state):
+        if state in self.openingsDict:
+            print('State found:')
+            state.draw_board()
+            return self.openingsDict[state]
+        else:
+            print('State not found')
+            return None
 
 
 # def printIndices(l):

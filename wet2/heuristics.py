@@ -2,10 +2,11 @@ import abstract
 from utils import INFINITY, run_with_limited_time, ExceededTimeError
 from Reversi.consts import EM, OPPONENT_COLOR, BOARD_COLS, BOARD_ROWS
 import scripts
-
+from Reversi.board import  GameState
 LAST_COL = BOARD_COLS - 1
 LAST_ROW = BOARD_ROWS - 1
 CORNER_INDICES = [(LAST_COL, 0), (0, 0), (LAST_COL, LAST_ROW), (0, LAST_ROW)]
+from copy import deepcopy
 
 def smart_heuristic(state, color):
     if len(state.get_possible_moves()) == 0:
@@ -169,37 +170,48 @@ def countEdges(state, color):
 
 def getPartialOpeningsDict():
 
-    d = scripts.createOpeningsDict()
+    #d holds
+    l = scripts.createOpeningsDict()
 
+    # For each partial board state add a board to the hash with the next move.
+    openings = {}
+    for val, _ in l:
+        game = GameState()
+        bookX, bookY = val[1], val[2]
+        openings[deepcopy(game)] = transformBookToOurCoordinates(bookX, bookY)
 
-    #For each partial board state add a board to the hash with the next move.
+        for i in range(0, len(val)-3, 3):
+            bookX = val[i+1]
+            bookY = val[i+2]
 
+            moveX, moveY = transformBookToOurCoordinates(val[i+4], val[i+5])
+            game.perform_move(*transformBookToOurCoordinates(bookX, bookY))
+            openings[deepcopy(game)] = (moveX, moveY)
 
-
-
+    return openings
 
 def transformBookToOurCoordinates(x, y):
 
     BOOK_X_TO_OUR_Y = {
-        'a':7,
-        'b':6,
-        'c':5,
-        'd':4,
-        'e':3,
-        'f':2,
-        'g':1,
-        'h':0
+        'a': 7,
+        'b': 6,
+        'c': 5,
+        'd': 4,
+        'e': 3,
+        'f': 2,
+        'g': 1,
+        'h': 0
     }
 
     BOOK_Y_TO_OUR_X = {
-        1:0,
-        2:1,
-        3:2,
-        4:3,
-        5:4,
-        6:5,
-        7:6,
-        8:7
+        '1': 0,
+        '2': 1,
+        '3': 2,
+        '4': 3,
+        '5': 4,
+        '6': 5,
+        '7': 6,
+        '8': 7
     }
 
     return BOOK_Y_TO_OUR_X[y], BOOK_X_TO_OUR_Y[x]
