@@ -5,9 +5,9 @@ from matplotlib import pyplot as plt
 import os
 import shutil
 
-players = ['simple_player', 'alpha_beta_player', 'min_max_player', 'better_player']
+players = ['simple_player', 'better_player', 'alpha_beta_player', 'min_max_player']
 times = ['2', '10', '50']
-PYTHON = r'/home/dorek/anaconda3/envs/py3/bin/python'
+PYTHON = r'C:\Users\Shaked\AppData\Local\Programs\Python\Python35\python.exe'
 def callto(time):
 
     for p1 in players:
@@ -50,7 +50,7 @@ def create_fianl_reult_and_csv_file():
                 with open(file_name, 'r') as file:
                     for line in file.readlines():
                         print('line is:{}'.format(line))
-                        winner = re.split('\n', line)[0].split(' ')[-1]
+                        winner = re.split('\n', line)[0].split(' ')[-1] + '_player'
                         p1_score = '0.5'
                         p2_score = '0.5'
                         if winner == p1:
@@ -73,7 +73,7 @@ def create_graph_and_final_table(final_result):
     headers = 't = 2, t = 10, t = 50, player_name\n'
     final_table.write(headers)
     plt.figure()
-    x = [int(t) for t in times]
+    x = [float(t) for t in times]
     plt.title('Score as a function of t')
     for player in players:
         time_to_point = final_result[player]
@@ -98,8 +98,8 @@ def main():
     final_result = create_fianl_reult_and_csv_file()
     create_graph_and_final_table(final_result)
 
-    if os.path.isdir('temp'):
-        shutil.rmtree('temp')
+    #if os.path.isdir('temp'):
+    #    shutil.rmtree('temp')
 
 
 if __name__ == '__main__':

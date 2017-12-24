@@ -32,16 +32,15 @@ class Player(abstract.AbstractPlayer):
 
         alg = MiniMaxWithAlphaBetaPruning(self.heuristic, self.color, self.no_more_time, None)
 
-        bestMove = None
-        bestVal = None
+        bestMove = possible_moves[0]
         alpha = -INFINITY
         beta = INFINITY
 
         d = 1
         try:
             while True:
-                bestVal, bestMove = alg.search(game_state, d, alpha, beta, True)
-                d+=1
+                _, bestMove = alg.search(game_state, d, alpha, beta, True)
+                d += 1
         except ExceededTimeError:
             pass
 

@@ -114,7 +114,7 @@ class MiniMaxAlgorithm:
             for m in possibleMoves:
                 nextState = getNextState(state, m)
                 val, _ = self.search(nextState, depth-1, not maximizing_player)
-                if curMax < val:
+                if curMax <= val:
                     curMax = val
                     bestMove = m
             return self.utility(state), bestMove
@@ -171,7 +171,7 @@ class MiniMaxWithAlphaBetaPruning:
             for m in possibleMoves:
                 nextState = getNextState(state, m)
                 val, _ = self.search(nextState, depth-1, alpha, beta, not maximizing_player)
-                if curMax < val:
+                if curMax <= val:
                     curMax = val
                     bestMove = m
                 alpha = max(alpha, curMax)
