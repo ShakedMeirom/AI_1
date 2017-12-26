@@ -8,31 +8,31 @@ import shutil
 players = ['simple_player', 'better_player', 'alpha_beta_player', 'min_max_player']
 times = ['2', '10', '50']
 PYTHON = r'C:\Users\Shaked\AppData\Local\Programs\Python\Python35\python.exe'
-def callto(time):
+def callto(p1, p2):
 
-    for p1 in players:
-        for p2 in players:
+    for time in times:
 
-            if p1 == p2:
-                continue
+        if p1 == p2:
+            continue
 
-            file_name = 'temp/' + p1 + p2+time+'.txt'
-            file = open(file_name, 'w+')
+        file_name = 'temp/' + p1 + p2+time+'.txt'
+        file = open(file_name, 'w+')
 
-            for _ in range(5):
-                print(PYTHON + ' run_game.py 2 {} 5 n {} {}'.format(time, p1, p2))
-                call([PYTHON, 'run_game.py', '2', time, '5', 'n', p1, p2], stdout=file)
+        for _ in range(5):
+            print(PYTHON + ' run_game.py 2 {} 5 n {} {}'.format(time, p1, p2))
+            call([PYTHON, 'run_game.py', '2', time, '5', 'n', p1, p2], stdout=file)
 
-            file.close()
+        file.close()
 
 
 def run_threads():
     threads = []
 
-    for time in times:
-        t = threading.Thread(target=callto, args=[time])
-        threads.append(t)
-        t.start()
+    for p1 in players:
+        for p2 in players:
+            t = threading.Thread(target=callto, args=[p1, p2])
+            threads.append(t)
+            t.start()
 
     for t in threads:
         t.join()

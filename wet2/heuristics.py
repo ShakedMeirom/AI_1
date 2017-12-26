@@ -19,9 +19,9 @@ def smart_heuristic(state, color):
             return 0
 
     weightsParamsTupleList = [
-        (1, discs_diff(state, color)),
+        (2, discs_diff(state, color)),
         (0.25, opponent_moves(state)),
-        (5, countCorners(state, color)),
+        (14, countCorners(state, color)),
         (-1.5, countNearCorners(state, color)),
         (0.5, countTraps(state, color)),
         (1, countEdges(state, color))]
