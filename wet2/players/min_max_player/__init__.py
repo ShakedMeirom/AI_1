@@ -23,7 +23,6 @@ class Player(abstract.AbstractPlayer):
             self.time_remaining_in_round / self.turns_remaining_in_round - 0.05
 
 
-
     def get_move(self, game_state, possible_moves):
         self.clock = time.time()
         self.time_for_current_move = self.time_remaining_in_round / self.turns_remaining_in_round - 0.05
@@ -40,6 +39,7 @@ class Player(abstract.AbstractPlayer):
                 d += 1
         except ExceededTimeError:
             pass
+        #print('mini_max depth is ', d, " possible moves: ", len(possible_moves))
 
 
         if self.turns_remaining_in_round == 1:

@@ -175,7 +175,7 @@ class MiniMaxWithAlphaBetaPruning:
                     curMax = val
                     bestMove = m
                 alpha = max(alpha, curMax)
-                if curMax > beta:
+                if curMax >= beta:
                     return INFINITY, bestMove
             return self.utility(state), bestMove
 
@@ -186,7 +186,7 @@ class MiniMaxWithAlphaBetaPruning:
                 val, _ = self.search(nextState, depth-1, alpha, beta, not maximizing_player)
                 curMin = min(curMin, val)
                 beta = min(beta, curMin)
-                if curMin < alpha:
+                if curMin <= alpha:
                     return -INFINITY, None
             return self.utility(state), None
 

@@ -43,6 +43,7 @@ class Player(abstract.AbstractPlayer):
                 d += 1
         except ExceededTimeError:
             pass
+        #print('alpha_beta depth is ', d, " possible moves: ", len(possible_moves))
 
 
         if self.turns_remaining_in_round == 1:
