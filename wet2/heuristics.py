@@ -48,10 +48,11 @@ def smart_heuristic(state, color):
     weightsParamsTupleList = [
         (1, discs_diff(state, color)),
         (0.25, opponent_moves(state, color)),
-        (5, countCorners(state, color)),
-        (-1.5, countNearCorners(state, color)),
-        (0.5, countTraps(state, color)),
-        (1, countEdges(state, color))]
+        (6, countCorners(state, color)),  # 5
+        (-0.5, countNearCorners(state, color)),  # -1.5
+        (0.4, countTraps(state, color)),
+        (0.25, countEdges(state, color)),  # 1
+        (0.5, assessStable(state, color))]  # 1
 
     return _calc_heuristic_value(weightsParamsTupleList)
 
@@ -161,6 +162,62 @@ def countCorners(state, color):
     cornersCount = sum([x == color for x in cornersVal]) - sum([x == OPPONENT_COLOR[color] for x in cornersVal])
     # print('Corners count:', cornersCount)
     return cornersCount
+
+
+def kth_diag_indices(mat, k):
+    k = 7 - k
+    rows, cols = np.diag_indices_from(mat)
+    if k < 0:
+        return rows[-k:], cols[:k]
+    elif k > 0:
+        return rows[:-k], cols[k:]
+    else:
+        return rows, cols
+
+def kth_diag_colors(state, mat, color, k):
+    curr_stable_indices = []
+    all_diag = True
+    diag_indices = kth_diag_indices(mat,k)
+    diag_colors = (mat[diag_indices])
+    for i in range(1,k+1):
+        if diag_colors.item(i) == color:
+            curr_stable_indices.append((diag_indices[0][i],diag_indices[1][i]))
+        else:
+            all_diag = False
+    return curr_stable_indices, all_diag
+
+def assessStable(state, color):
+    stable_indices = []
+    mat = np.matrix(state.board)
+    if state.board[0][0] == color:
+        for k in range(1,7):
+            curr_stable_indices, all_diag = kth_diag_colors(state, np.flip(mat,1), color, k)
+            stable_indices += curr_stable_indices
+            if not all_diag:
+                break
+
+    if state.board[0][LAST_COL] == color:
+        for k in range(1, 7):
+            curr_stable_indices, all_diag = kth_diag_colors(state, mat, color, k)
+            stable_indices += curr_stable_indices
+            if not all_diag:
+                break
+
+    if state.board[LAST_ROW][LAST_COL] == color:
+        for k in range(1, 7):
+            curr_stable_indices, all_diag = kth_diag_colors(state, np.flip(np.flip(mat,0),1), color, k)
+            stable_indices += curr_stable_indices
+            if not all_diag:
+                break
+
+    if state.board[LAST_ROW][LAST_COL] == color:
+        for k in range(1, 7):
+            curr_stable_indices, all_diag = kth_diag_colors(state, np.flip(mat,0), color, k)
+            stable_indices += curr_stable_indices
+            if not all_diag:
+                break
+
+    return len(set(stable_indices))
 
 
 # "near corners" are squares that allow direct access to corners

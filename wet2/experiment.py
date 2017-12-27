@@ -8,11 +8,10 @@ import shutil
 players = ['simple_player', 'better_player', 'alpha_beta_player', 'min_max_player']
 times = ['2', '10', '50']
 PYTHON = r'C:\Users\Shaked\AppData\Local\Programs\Python\Python35\python.exe'
-def callto(time):
+def callto(p1):
 
-    for p1 in players:
-        for p2 in players:
-
+    for p2 in players:
+        for time in times:
             if p1 == p2:
                 continue
 
@@ -29,13 +28,21 @@ def callto(time):
 def run_threads():
     threads = []
 
-    for time in times:
-        t = threading.Thread(target=callto, args=[time])
+    for p1 in ['simple_player', 'better_player']:
+        t = threading.Thread(target=callto, args=[p1])
         threads.append(t)
         t.start()
 
     for t in threads:
         t.join()
+
+    for p1 in ['alpha_beta_player', 'min_max_player']:
+            t = threading.Thread(target=callto, args=[p1])
+            threads.append(t)
+            t.start()
+
+    for t in threads:
+            t.join()
 
 
 def create_fianl_reult_and_csv_file():
@@ -95,7 +102,7 @@ def main():
     if not os.path.isdir('temp'):
         os.mkdir('temp')
 
-    #run_threads()
+    run_threads()
     final_result = create_fianl_reult_and_csv_file()
     create_graph_and_final_table(final_result)
 
