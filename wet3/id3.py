@@ -79,7 +79,7 @@ def createTree(data, target, features):
             node = Node()
             node.prediction = True
             return node
-        
+
         majorityClass = target.value_counts().index[0]
 
 

@@ -1,8 +1,10 @@
 import pandas as pd
+import numpy as np
 import id3
 from sklearn.model_selection import KFold
 from sklearn.model_selection import cross_val_score
 from sklearn.svm import SVC
+from collections import Counter
 
 #Consts:
 
@@ -26,7 +28,11 @@ if __name__ == '__main__':
 
 
     kf = KFold(n_splits= 4, shuffle=False)
+    mList = []
+    scoreList = []
+
     for trainIdx, testIdx in kf.split(data):
+
         tempDataTrain = data.iloc[trainIdx]
         tempTargetTrain = target.iloc[trainIdx]
 
@@ -37,7 +43,37 @@ if __name__ == '__main__':
         tree.fit(tempDataTrain, tempTargetTrain)
         score = tree.score(tempDataTest, tempTargetTest)
 
-        print('Score is:', score)
+
+
+        #Create confusion matrix:
+        predicted = list(tree.predict(tempDataTest))
+        actual = list(tempTargetTest)
+        c = {True: Counter(),
+             False: Counter()}
+
+        for i in range(len(predicted)):
+            c[actual[i]].update([predicted[i]])
+        m = np.empty([2,2])
+        m[0][0] = c[True][True]
+        m[0][1] = c[True][False]
+        m[1][0] = c[False][True]
+        m[1][1] = c[False][False]
+
+        mList.append(m)
+        scoreList.append(score)
+
+
+    finalScore = sum(scoreList)/4
+
+    finalM = np.zeros([2,2])
+    for m in mList:
+        finalM+= m
+
+    print('The average score is:', finalScore)
+    print('The sum of matrices is:', finalM)
+
+
+
 
 
 
