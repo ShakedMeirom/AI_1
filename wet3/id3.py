@@ -34,7 +34,7 @@ class ID3DecisionTreeClassifier:
     def fit(self, data, target):
 
         features = list(data.columns)
-        self.tree = createTree(data, target, features)
+        self.tree = ID3DecisionTreeClassifier.createTree(data, target, features)
 
     def predict(self, vals):
         res = []
@@ -71,39 +71,51 @@ class ID3DecisionTreeClassifier:
 
 
 
-def createTree(data, target, features):
+    @staticmethod
+    def createTree(data, target, features):
+
+            createTree  = ID3DecisionTreeClassifier.createTree
+
+            #True is the default value
+            if target.size == 0:
+                node = Node()
+                node.prediction = False
+                return node
+
+            majorityClass = target.value_counts().index[0]
 
 
-        #True is the default value
-        if target.size == 0:
+
+            #TODO  - what happens when there are no more features?
+            if not features or all(target == majorityClass):
+                node = Node()
+                node.prediction = majorityClass
+
+                return node
+
+
+
+
+            f = ID3DecisionTreeClassifier.selectFeature(data, target, features)
+            features.remove(f)
+            rightData, rightTarget = createSubTreeData(f, True, data, target)
+            leftData, leftTarget = createSubTreeData(f, False, data, target)
+
+
             node = Node()
-            node.prediction = True
+            node.feature = f
+            node.pRight = createTree(rightData, rightTarget, features)
+            node.pLeft = createTree(leftData, leftTarget, features)
+
             return node
 
-        majorityClass = target.value_counts().index[0]
+    @staticmethod
+    def selectFeature(data, target, features):
 
+        informationGainList = \
+            np.asarray([informationGain(data, target, f) for f in features])
 
-
-        #TODO  - what happens when there are no more features?
-        if not features or all(target == majorityClass):
-            node = Node()
-            node.prediction = majorityClass
-
-            return node
-
-        f = selectFeature(data, target, features)
-        features.remove(f)
-        rightData, rightTarget = createSubTreeData(f, True, data, target)
-        leftData, leftTarget = createSubTreeData(f, False, data, target)
-
-
-        node = Node()
-        node.feature = f
-        node.pRight = createTree(rightData, rightTarget, features)
-        node.pLeft = createTree(leftData, leftTarget, features)
-
-        return node
-
+        return features[informationGainList.argmax()]
 
 #Return tuple of (data, target), whereas data[feature] == value
 def createSubTreeData(feature, value, data, target):
@@ -114,11 +126,6 @@ def createSubTreeData(feature, value, data, target):
         return newData, newTarget
 
 
-def selectFeature(data, target, features):
-
-    informationGainList =\
-        np.asarray([informationGain(data, target, f) for f in features])
-    return features[informationGainList.argmax()]
 
 def informationGain(data, target, feature):
 

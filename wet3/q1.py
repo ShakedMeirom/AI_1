@@ -69,8 +69,8 @@ if __name__ == '__main__':
     for m in mList:
         finalM+= m
 
-    print('The average score is:', finalScore)
-    print('The sum of matrices is:', finalM)
+    print(finalScore)
+    print( finalM)
 
 
 
