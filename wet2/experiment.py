@@ -8,12 +8,12 @@ import shutil
 players = ['simple_player', 'better_player', 'alpha_beta_player', 'min_max_player']
 times = ['2', '10', '50']
 PYTHON = r'C:\Users\Shaked\AppData\Local\Programs\Python\Python35\python.exe'
-def callto(p1, p2):
+def callto(p1):
 
-    for time in times:
-
-        if p1 == p2:
-            continue
+    for p2 in players:
+        for time in times:
+            if p1 == p2:
+                continue
 
         file_name = 'temp/' + p1 + p2+time+'.txt'
         file = open(file_name, 'w+')
@@ -28,14 +28,21 @@ def callto(p1, p2):
 def run_threads():
     threads = []
 
-    for p1 in players:
-        for p2 in players:
-            t = threading.Thread(target=callto, args=[p1, p2])
+    for p1 in ['simple_player', 'better_player']:
+        t = threading.Thread(target=callto, args=[p1])
+        threads.append(t)
+        t.start()
+
+    for t in threads:
+        t.join()
+
+    for p1 in ['alpha_beta_player', 'min_max_player']:
+            t = threading.Thread(target=callto, args=[p1])
             threads.append(t)
             t.start()
 
     for t in threads:
-        t.join()
+            t.join()
 
 
 def create_fianl_reult_and_csv_file():
@@ -49,21 +56,22 @@ def create_fianl_reult_and_csv_file():
                 file_name = 'temp/' + p1 + p2+time+'.txt'
                 with open(file_name, 'r') as file:
                     for line in file.readlines():
-                        print('line is:{}'.format(line))
-                        winner = re.split('\n', line)[0].split(' ')[-1] + '_player'
-                        p1_score = '0.5'
-                        p2_score = '0.5'
-                        if winner == p1:
-                            p1_score = '1'
-                            p2_score = '0'
-                        elif winner == p2:
-                            p1_score = '0'
-                            p2_score = '1'
-                        final_result[p1][time] += float(p1_score)
-                        final_result[p2][time] += float(p2_score)
-                        line_to_print = p1 + ',' + p2 + ',' + time + ',' + p1_score + ',' + p2_score + '\n'
-                        final.write(line_to_print)
-
+                        if "winner" in line:
+                            winner = re.split('\n', line)[0].split(' ')[-1] + '_player'
+                            p1_score = '0.5'
+                            p2_score = '0.5'
+                            if winner == p1:
+                                p1_score = '1'
+                                p2_score = '0'
+                            elif winner == p2:
+                                p1_score = '0'
+                                p2_score = '1'
+                            final_result[p1][time] += float(p1_score)
+                            final_result[p2][time] += float(p2_score)
+                            line_to_print = p1 + ',' + p2 + ',' + time + ',' + p1_score + ',' + p2_score + '\n'
+                            final.write(line_to_print)
+                        else:
+                            print('line is:{}'.format(line))
     final.close()
     return final_result
 
