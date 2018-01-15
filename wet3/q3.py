@@ -26,7 +26,7 @@ if __name__ == '__main__':
     target = data[TARGET_LABEL]
     data = data.drop(TARGET_LABEL, axis = 1)
 
-    xTrain, xTest, yTrain, yTest = train_test_split(data, target, test_size= 0.25, shuffle= False)
+    xTrain, xTest, yTrain, yTest = train_test_split(data, target, test_size= 0.25)
 
     tree = classifier()
     tree.fit(xTrain, yTrain)
