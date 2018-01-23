@@ -1,38 +1,32 @@
-import id3
 import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeClassifier
+from parse_data import *
 
 TARGET_LABEL = 'classification'
 INPUT_FILE = 'flare.csv'
 
-class overFittedTree(id3.ID3DecisionTreeClassifier):
-    @staticmethod
-    def selectFeature(data, target, features):
-        return super().selectFeature(data, target, features)
-
-
-
-
-
-
 if __name__ == '__main__':
 
-    classifier = id3.ID3DecisionTreeClassifier
+    # parse data:
+    x, y = parse_data_to_lists()
 
-    data = pd.read_csv(INPUT_FILE)
+    # split the data to train and test:
+    xTrain, xTest, yTrain, yTest = train_test_split(x, y, test_size=0.25)
 
-    # print(df.columns)
-    target = data[TARGET_LABEL]
-    data = data.drop(TARGET_LABEL, axis = 1)
+    ######### Over-Fit ####################
+    # train an over-fitted Decision Tree:
+    ID3_overfit = DecisionTreeClassifier(criterion="entropy")
+    ID3_overfit.fit(xTrain, yTrain)
 
-    xTrain, xTest, yTrain, yTest = train_test_split(data, target, test_size= 0.25)
+    # check the accuracy of the over-fitted tree:
+    print("ID3 over-fit version: accuracy on train, is: ", ID3_overfit.score(xTrain, yTrain))
 
-    tree = classifier()
-    tree.fit(xTrain, yTrain)
+    ######### Under-Fit ####################
+    # train an under-fitted Decision Tree:
+    ID3_underfit = DecisionTreeClassifier(criterion="entropy", max_depth=1)
+    ID3_underfit.fit(xTrain, yTrain)
 
-    res = tree.predict(xTrain)
-
-    print('Accuracy on trainning:', tree.score(xTrain, yTrain))
-    print('Accuracy on test:', tree.score(xTest, yTest))
-
+    # check the accuracy of the over-fitted tree:
+    print("ID3 under-fit version accuracy on train, is: ", ID3_underfit.score(xTrain, yTrain))

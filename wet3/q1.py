@@ -70,7 +70,7 @@ if __name__ == '__main__':
         finalM+= m
 
     print(finalScore)
-    print( finalM)
+    print(finalM)
 
 
 
