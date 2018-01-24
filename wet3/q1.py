@@ -1,10 +1,10 @@
 import pandas as pd
 import numpy as np
-import id3
 from sklearn.model_selection import KFold
 from sklearn.model_selection import cross_val_score
 from sklearn.svm import SVC
 from collections import Counter
+from sklearn.tree import DecisionTreeClassifier
 
 #Consts:
 
@@ -14,7 +14,7 @@ INPUT_FILE = 'flare.csv'
 
 if __name__ == '__main__':
 
-    classifier = id3.ID3DecisionTreeClassifier
+    classifier = DecisionTreeClassifier(criterion="entropy")
 
     data = pd.read_csv(INPUT_FILE)
 
@@ -39,7 +39,7 @@ if __name__ == '__main__':
         tempDataTest = data.iloc[testIdx]
         tempTargetTest = target.iloc[testIdx]
 
-        tree = classifier()
+        tree = classifier
         tree.fit(tempDataTrain, tempTargetTrain)
         score = tree.score(tempDataTest, tempTargetTest)
 
